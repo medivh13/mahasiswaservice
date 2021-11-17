@@ -29,30 +29,3 @@ func Initialize(host, username, password, database, port string) (Database, erro
 
 	return db, nil
 }
-
-// func InitializeMongo(host, user, password, database, port string) (*mongo.Database, *mongo.Client, error) {
-
-// 	db := Database{}
-
-// 	dsn := fmt.Sprintf("mongodb://%s:%s", host, port)
-
-// 	clientOptions := options.Client().ApplyURI(dsn).SetAuth(options.Credential{
-// 		Username:   user,
-// 		Password:   password,
-// 		AuthSource: database,
-// 	})
-// 	client, err := mongo.NewClient(clientOptions)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return nil, nil, err
-// 	}
-
-// 	err = client.Connect(context.TODO())
-// 	if err != nil {
-// 		log.Fatal(err)
-// 		return nil, nil, err
-// 	}
-
-// 	db.ConnMongo = client.Database(database)
-// 	return db.ConnMongo, client, nil
-// }
