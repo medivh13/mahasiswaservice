@@ -44,7 +44,7 @@ func main() {
 
 	db, err := database.Initialize(dbhost, dbUser, dbPassword, dbName, dbPort)
 	if err != nil {
-		log.Fatal("Failed to Connect MySQL Database: " + err.Error())
+		log.Fatal("Failed to Connect Postgre Database: " + err.Error())
 	}
 
 	defer func() {

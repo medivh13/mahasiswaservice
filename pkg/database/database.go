@@ -9,7 +9,6 @@ import (
 
 type Database struct {
 	Conn *sqlx.DB
-	// ConnMongo *mongo.Database
 }
 
 func Initialize(host, username, password, database, port string) (Database, error) {
