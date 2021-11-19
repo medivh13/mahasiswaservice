@@ -23,7 +23,7 @@ func (dto *MahasiswaReqDTO) Validate() error {
 
 type UpadeMahasiswaNamaReqDTO struct {
 	Nama string `json:"nama" valid:"required" validname:"nama"`
-	ID   int64  `json:"id" valid:"integer, non_zero" validname:"id"`
+	ID   int64  `json:"id" valid:"required,integer,non_zero" validname:"id"`
 }
 
 func (dto *UpadeMahasiswaNamaReqDTO) Validate() error {
