@@ -38,3 +38,39 @@ func (s *service) UpdateMahasiswaNama(req *dto.UpadeMahasiswaNamaReqDTO) error {
 
 	return nil
 }
+
+func (s *service) GetMahasiswaAlamatByID(req *dto.GetMahasiswaAlamatByIDReqDTO) (*dto.GetMahasiswaAlamatByIDRespDTO, error) {
+	var resp *dto.GetMahasiswaAlamatByIDRespDTO
+
+	getMahasiswaMap := make(map[int64]*dto.GetMahasiswaAlamatByIDRespDTO)
+	data, err := s.repo.GetMahasiswaAlamatByID(req.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, val := range data {
+		if _, ok := getMahasiswaMap[val.ID]; !ok {
+			getMahasiswaMap[val.ID] = &dto.GetMahasiswaAlamatByIDRespDTO{
+				ID:   val.ID,
+				Nama: val.Name,
+				Nim:  val.Nim,
+			}
+			getMahasiswaMap[val.ID].Alamats = append(getMahasiswaMap[val.ID].Alamats, &dto.AlamatRespDTO{
+				Jalan:   val.Jalan,
+				NoRumah: val.NoRumah,
+			})
+		} else {
+			getMahasiswaMap[val.ID].Alamats = append(getMahasiswaMap[val.ID].Alamats, &dto.AlamatRespDTO{
+				Jalan:   val.Jalan,
+				NoRumah: val.NoRumah,
+			})
+		}
+	}
+
+	for _, val := range getMahasiswaMap {
+		resp = val
+	}
+
+	return resp, nil
+}

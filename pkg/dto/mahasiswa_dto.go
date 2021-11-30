@@ -31,3 +31,25 @@ func (dto *UpadeMahasiswaNamaReqDTO) Validate() error {
 
 	return v.Validate()
 }
+
+type GetMahasiswaAlamatByIDReqDTO struct {
+	ID int64 `json:"id" valid:"required,integer,non_zero" validname:"id"`
+}
+
+func (dto *GetMahasiswaAlamatByIDReqDTO) Validate() error {
+	v := validator.NewValidate(dto)
+
+	return v.Validate()
+}
+
+type GetMahasiswaAlamatByIDRespDTO struct {
+	ID      int64            `json:"id"`
+	Nama    string           `json:"nama"`
+	Nim     string           `json:"nim"`
+	Alamats []*AlamatRespDTO `json:"alamat"`
+}
+
+type AlamatRespDTO struct {
+	Jalan   string `json:"jalan"`
+	NoRumah string `json:"no_rumah"`
+}

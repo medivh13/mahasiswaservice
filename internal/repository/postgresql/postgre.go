@@ -12,15 +12,19 @@ import (
 )
 
 const (
-	SaveMahasiswa       = `INSERT INTO kampus.mahasiswas (nama, nim, created_at) VALUES ($1, $2, now()) RETURNING id`
-	SaveMahasiswaAlamat = `INSERT INTO kampus.mahasiswa_alamats (jalan, no_rumah, created_at, id_mahasiswas) VALUES ($1,$2, now(), $3)`
-	UpdateMahasiswaNama = `UPDATE kampus.mahasiswas SET nama = $1, updated_at = now() where id = $2`
+	SaveMahasiswa          = `INSERT INTO kampus.mahasiswas (nama, nim, created_at) VALUES ($1, $2, now()) RETURNING id`
+	SaveMahasiswaAlamat    = `INSERT INTO kampus.mahasiswa_alamats (jalan, no_rumah, created_at, id_mahasiswas) VALUES ($1,$2, now(), $3)`
+	UpdateMahasiswaNama    = `UPDATE kampus.mahasiswas SET nama = $1, updated_at = now() where id = $2`
+	TampilMahasiswa        = `SELECT id, nama, nim from kampus.mahasiswas WHERE %s`
+	GetMahasiswaAlamatByID = `SELECT a.id, a.nama, a.nim, b.jalan, b.no_rumah from kampus.mahasiswas a JOIN kampus.mahasiswa_alamats b ON a.id = b.id_mahasiswas
+	WHERE a.id = $1`
 )
 
 var statement PreparedStatement
 
 type PreparedStatement struct {
-	updateMahasiswaNama *sqlx.Stmt
+	updateMahasiswaNama    *sqlx.Stmt
+	getMahasiswaAlamatByID *sqlx.Stmt
 }
 
 type PostgreSQLRepo struct {
@@ -45,7 +49,8 @@ func (p *PostgreSQLRepo) Preparex(query string) *sqlx.Stmt {
 
 func InitPreparedStatement(m *PostgreSQLRepo) {
 	statement = PreparedStatement{
-		updateMahasiswaNama: m.Preparex(UpdateMahasiswaNama),
+		updateMahasiswaNama:    m.Preparex(UpdateMahasiswaNama),
+		getMahasiswaAlamatByID: m.Preparex(GetMahasiswaAlamatByID),
 	}
 }
 
@@ -99,4 +104,18 @@ func (p *PostgreSQLRepo) UpdateMahasiswaNama(dataMahasiswa *models.MahasiswaMode
 	}
 
 	return nil
+}
+
+func (p *PostgreSQLRepo) GetMahasiswaAlamatByID(id int64) ([]*models.GetMahasiswaAlamatsModels, error) {
+	var data []*models.GetMahasiswaAlamatsModels
+
+	err := statement.getMahasiswaAlamatByID.Select(&data, id)
+	if err != nil {
+		log.Println("Failed Query GetMahasiswaAlamatByID: ", err.Error())
+		return data, fmt.Errorf(mhsErrors.ErrorDB)
+	}
+	if len(data) == 0 {
+		return data, fmt.Errorf(mhsErrors.ErrorDataNotFound)
+	}
+	return data, nil
 }
