@@ -8,7 +8,9 @@ import (
 
 	"github.com/medivh13/mahasiswaservice/pkg/database"
 
+	integ "github.com/medivh13/mahasiswaservice/internal/integration"
 	Repo "github.com/medivh13/mahasiswaservice/internal/repository/postgresql"
+
 	"github.com/medivh13/mahasiswaservice/internal/services"
 	handlers "github.com/medivh13/mahasiswaservice/internal/transport/http"
 	"github.com/medivh13/mahasiswaservice/internal/transport/http/middleware"
@@ -57,7 +59,8 @@ func main() {
 	e.Use(m.CORS)
 
 	sqlrepo := Repo.NewRepo(db.Conn)
-	srv := services.NewService(sqlrepo)
+	integSrv := integ.NewService()
+	srv := services.NewService(sqlrepo, integSrv)
 	handlers.NewHttpHandler(e, srv)
 
 	go func() {

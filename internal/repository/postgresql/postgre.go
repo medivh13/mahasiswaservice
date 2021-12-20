@@ -18,6 +18,9 @@ const (
 	TampilMahasiswa        = `SELECT id, nama, nim from kampus.mahasiswas WHERE %s`
 	GetMahasiswaAlamatByID = `SELECT a.id, a.nama, a.nim, b.jalan, b.no_rumah from kampus.mahasiswas a JOIN kampus.mahasiswa_alamats b ON a.id = b.id_mahasiswas
 	WHERE a.id = $1`
+
+	GetMahasiswaAlamatAllOrByParam = `SELECT a.id, a.nama, a.nim, b.jalan, b.no_rumah from kampus.mahasiswas a JOIN kampus.mahasiswa_alamats b ON a.id = b.id_mahasiswas
+	WHERE %s`
 )
 
 var statement PreparedStatement
@@ -114,6 +117,28 @@ func (p *PostgreSQLRepo) GetMahasiswaAlamatByID(id int64) ([]*models.GetMahasisw
 		log.Println("Failed Query GetMahasiswaAlamatByID: ", err.Error())
 		return data, fmt.Errorf(mhsErrors.ErrorDB)
 	}
+	if len(data) == 0 {
+		return data, fmt.Errorf(mhsErrors.ErrorDataNotFound)
+	}
+	return data, nil
+}
+
+func (p *PostgreSQLRepo) GetMahasiswaAlamat(where string) ([]*models.GetMahasiswaAlamatsModels, error) {
+	var data []*models.GetMahasiswaAlamatsModels
+	var query string
+
+	if where != "" && where != "%s" {
+		query = fmt.Sprintf(GetMahasiswaAlamatAllOrByParam, where)
+	} else {
+		query = fmt.Sprintf(GetMahasiswaAlamatAllOrByParam, "1=1")
+	}
+
+	err := p.Conn.Select(&data, query)
+	if err != nil {
+		log.Println("Failed Query GetMahasiswaAlamat: ", err.Error())
+		return data, fmt.Errorf(mhsErrors.ErrorDB)
+	}
+
 	if len(data) == 0 {
 		return data, fmt.Errorf(mhsErrors.ErrorDataNotFound)
 	}

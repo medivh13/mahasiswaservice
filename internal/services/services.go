@@ -6,4 +6,8 @@ type Services interface {
 	SaveMahasiswaAlamat(req *dto.MahasiswaReqDTO) error
 	UpdateMahasiswaNama(req *dto.UpadeMahasiswaNamaReqDTO) error
 	GetMahasiswaAlamatByID(req *dto.GetMahasiswaAlamatByIDReqDTO) (*dto.GetMahasiswaAlamatByIDRespDTO, error)
+	GetMahasiswaAlamat(req *dto.GetMahasiswaAlamatReqDTO) ([]*dto.GetMahasiswaAlamatRespDTO, error)
+
+	// with integration
+	GetIntegDadJoke(req *dto.GetDadJokesInternalReqDTO) (*dto.GetDadJokesRandomRespDTO, error)
 }

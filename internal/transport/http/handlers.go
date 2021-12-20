@@ -24,7 +24,8 @@ func NewHttpHandler(e *echo.Echo, srv services.Services) {
 	e.GET("api/v1/latihan/ping", handler.Ping)
 	e.POST("api/v1/latihan/mahasiswa-alamat", handler.SaveMahasiswaAlamat)
 	e.PATCH("api/v1/latihan/mahasiswa", handler.UpdateMahasiswaNama)
-	e.GET("api/v1/latihan/mahasiswa-alamat", handler.GetMahasiswaAlamatByID)
+	e.GET("api/v1/latihan/mahasiswa-alamat", handler.GetMahasiswaAlamat)
+	e.GET("api/v1/latihan/dad-jokes", handler.GetRandomDadJokes)
 
 }
 
@@ -131,6 +132,83 @@ func (h *HttpHandler) GetMahasiswaAlamatByID(c echo.Context) error {
 	}
 
 	data, err := h.service.GetMahasiswaAlamatByID(&postDTO)
+	if err != nil {
+		log.Error(err.Error())
+		return c.JSON(getStatusCode(err), dto.ResponseDTO{
+			Success: false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	var resp = dto.ResponseDTO{
+		Success: true,
+		Message: mhsConst.GetDataSuccess,
+		Data:    data,
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}
+
+func (h *HttpHandler) GetMahasiswaAlamat(c echo.Context) error {
+	postDTO := dto.GetMahasiswaAlamatReqDTO{}
+
+	postDTO.Authorization = c.Request().Header.Get("Authorization")
+	postDTO.DateTime = c.Request().Header.Get("datetime")
+	postDTO.Signature = c.Request().Header.Get("signature")
+
+	if err := c.Bind(&postDTO); err != nil {
+		log.Error(err.Error())
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	err := postDTO.Validate()
+	if err != nil {
+		log.Error(err.Error())
+		return c.JSON(getStatusCode(err), dto.ResponseDTO{
+			Success: false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	data, err := h.service.GetMahasiswaAlamat(&postDTO)
+	if err != nil {
+		log.Error(err.Error())
+		return c.JSON(getStatusCode(err), dto.ResponseDTO{
+			Success: false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	var resp = dto.ResponseDTO{
+		Success: true,
+		Message: mhsConst.GetDataSuccess,
+		Data:    data,
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}
+
+func (h *HttpHandler) GetRandomDadJokes(c echo.Context) error {
+	postDTO := dto.GetDadJokesInternalReqDTO{}
+
+	postDTO.Authorization = c.Request().Header.Get("Authorization")
+	postDTO.DateTime = c.Request().Header.Get("datetime")
+	postDTO.Signature = c.Request().Header.Get("signature")
+
+	err := postDTO.Validate()
+	if err != nil {
+		log.Error(err.Error())
+		return c.JSON(getStatusCode(err), dto.ResponseDTO{
+			Success: false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	data, err := h.service.GetIntegDadJoke(&postDTO)
 	if err != nil {
 		log.Error(err.Error())
 		return c.JSON(getStatusCode(err), dto.ResponseDTO{
