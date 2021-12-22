@@ -13,6 +13,7 @@ type GetDadJokesInternalReqDTO struct {
 	Authorization string `json:"Authorization" valid:"required" validname:"datetime"`
 	Signature     string `json:"signature" valid:"required" validname:"signature"`
 	DateTime      string `json:"datetime" valid:"required" validname:"datetime"`
+	ID            string `json:"id,omitempty,string"`
 }
 
 func (dto *GetDadJokesInternalReqDTO) Validate() error {

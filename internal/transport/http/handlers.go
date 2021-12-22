@@ -198,6 +198,11 @@ func (h *HttpHandler) GetRandomDadJokes(c echo.Context) error {
 	postDTO.DateTime = c.Request().Header.Get("datetime")
 	postDTO.Signature = c.Request().Header.Get("signature")
 
+	if err := c.Bind(&postDTO); err != nil {
+		log.Error(err.Error())
+		return c.NoContent(http.StatusBadRequest)
+	}
+
 	err := postDTO.Validate()
 	if err != nil {
 		log.Error(err.Error())

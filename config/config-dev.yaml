@@ -17,7 +17,6 @@ integrations:
   externals:
     http:
       icanhazdadjoke:
-       
         host: "https://icanhazdadjoke.com"
         endpoints:
           random: "/"

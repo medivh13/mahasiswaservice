@@ -128,7 +128,7 @@ func (s *service) GetMahasiswaAlamat(req *dto.GetMahasiswaAlamatReqDTO) ([]*dto.
 func (s *service) GetIntegDadJoke(req *dto.GetDadJokesInternalReqDTO) (*dto.GetDadJokesRandomRespDTO, error) {
 	var resp *dto.GetDadJokesRandomRespDTO
 
-	resp, err := s.IntegServ.GetRandomDadJokes()
+	resp, err := s.IntegServ.GetRandomDadJokes(req)
 
 	if err != nil {
 		return nil, err

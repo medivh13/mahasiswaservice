@@ -18,10 +18,19 @@ func NewService() IntegServices {
 	return &integService{}
 }
 
-func (s *integService) GetRandomDadJokes() (*dto.GetDadJokesRandomRespDTO, error) {
-	var response dto.GetDadJokesRandomRespDTO
+func (s *integService) GetRandomDadJokes(req *dto.GetDadJokesInternalReqDTO) (*dto.GetDadJokesRandomRespDTO, error) {
 
-	url := util.GetIntegURL("icanhazdadjoke", "random")
+	var response dto.GetDadJokesRandomRespDTO
+	var url string
+
+	if req.ID != "" {
+		url = util.GetIntegURL("icanhazdadjoke", "byId")
+
+		url = fmt.Sprintf(url, req.ID)
+
+	} else {
+		url = util.GetIntegURL("icanhazdadjoke", "random")
+	}
 
 	getReq, err := http.NewRequest(http.MethodGet, url, nil)
 
@@ -35,6 +44,7 @@ func (s *integService) GetRandomDadJokes() (*dto.GetDadJokesRandomRespDTO, error
 		Timeout: 15 * time.Second,
 	}
 	resp, err := client.Do(getReq)
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to create http request icanhazdadjoke getRandom: %v", err)
 	}
