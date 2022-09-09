@@ -93,3 +93,49 @@ type GetMahasiswaAlamatRespDTO struct {
 	Nim     string           `json:"nim"`
 	Alamats []*AlamatRespDTO `json:"alamat"`
 }
+
+// vendor
+// district
+// PO
+//  PO item
+//  Qty Request
+//  Qty receive
+//  Price
+//  UOM
+// warehouse
+
+// {
+// 	vendor :Jody,
+// 	district : Cilacap,
+// 	PO :
+//   		[
+// 			Item :Baju,
+//   			QtyReq : 10,
+// 			QtyReceive : 10,
+//   			Price : 10000,
+//   			Uom : EA
+// 	  	],
+//   		[
+// 			Item : "Baju",
+//   			QtyReq : 10,
+// 			QtyReceive : 10,
+//   			Price : 10000,
+//   			Uom : "EA"
+//   		],
+// 	warehouse : "Pucang"
+// }
+// a b c d e e f g h
+// type GetVendorRespDTO struct {
+// 	Vendor string `json: "vendor"`
+// 	District string `json: "district"`
+// 	PO []*PoDTO `json: "po"`
+// 	Warehouse string `json:"warehouse"`
+// }
+
+// type PoDTO struct {
+// 	Item string `json:"po_item"`
+// 	QtyReq string `json:"qty_request"`
+// 	QtyReceive string `json:"qty_receive"`
+// 	Price string `json:"price"`
+// 	UOM string `json : "uom"`
+// }
